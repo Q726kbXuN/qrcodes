@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html><head>
+<meta charset="UTF-8">
+<title>WiFi QR</title>
+<script src="VanillaQR.js"></script>
+<script>
+var qr;
+function makeURL() {
+    var ssid = clean(document.getElementById("ssid").value);
+    var pw = clean(document.getElementById("pw").value);
+    return "WIFI:T:WPA;S:" + ssid + ";P:" + pw + ";;";
+}
+window.onload = function() {
+    qr = new VanillaQR({
+        url: makeURL(),
+        size: 350,
+        toTable: false,
+        ecclevel: 1,
+        noBorder: false,
+        borderSize: 4
+    });
+    document.getElementById("qr").appendChild(qr.domElement);
+    document.getElementById("ssid").addEventListener("input", changed);
+    document.getElementById("pw").addEventListener("input", changed);
+};
+function clean(value) {
+    value = String(value);
+    value = value.replace(/\\/g, "\\\\");
+    value = value.replace(/;/g, "\\;");
+    value = value.replace(/,/g, "\\,");
+    value = value.replace(/"/g, "\\\"");
+    value = value.replace(/;/g, "\\;");
+    return value;
+}
+function changed() {
+    qr.url = makeURL();
+    qr.init();
+}
+</script>    
+</head>
+<body>
+<div id="qr">
+</div>
+SSID: <input id="ssid"><br>
+PW: <input id="pw">
+</body>
+</html>
