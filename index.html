@@ -11,7 +11,7 @@ function makeURL() {
     var pw = clean(document.getElementById("pw").value);
     return "WIFI:T:WPA;S:" + ssid + ";P:" + pw + ";;";
 }
-window.onload = function() {
+function makeImage() {
     qr = new VanillaQR({
         url: makeURL(),
         size: 350,
@@ -20,9 +20,17 @@ window.onload = function() {
         noBorder: false,
         borderSize: 4
     });
-    document.getElementById("qr").appendChild(qr.domElement);
+    var imageElement = qr.toImage("png");
+    var div = document.getElementById("qr");
+    while (div.firstChild) {
+        div.removeChild(div.firstChild);
+    }
+    div.appendChild(imageElement);
+}
+window.onload = function() {
     document.getElementById("ssid").addEventListener("input", changed);
     document.getElementById("pw").addEventListener("input", changed);
+    makeImage();
 };
 function clean(value) {
     value = String(value);
@@ -34,8 +42,7 @@ function clean(value) {
     return value;
 }
 function changed() {
-    qr.url = makeURL();
-    qr.init();
+    makeImage();
 }
 </script>    
 </head>
